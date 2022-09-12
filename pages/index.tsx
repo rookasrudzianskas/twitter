@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Sidebar from "../components/Sidebar";
 
 const Home: NextPage = () => {
   return (
@@ -10,7 +11,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1200px-Twitter-logo.svg.png" />
       </Head>
 
-      Hello, World!
+        <Sidebar />
+
     </div>
   )
 }
