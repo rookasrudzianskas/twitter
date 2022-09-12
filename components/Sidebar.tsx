@@ -13,14 +13,16 @@ import SidebarRow from "./SidebarRow";
 
 const Sidebar = () => {
     return (
-        <div>
-            <img src="https://links.papareact.com/drq" className="h-10 w-10" alt=""/>
+        <div className="flex flex-col col-span-2 items-center px-4 md:items-start">
+            <img src="https://links.papareact.com/drq" className="m-3 h-10 w-10" alt=""/>
             <SidebarRow Icon={HomeIcon} title="Home" />
             <SidebarRow Icon={HashtagIcon} title="Explore" />
             <SidebarRow Icon={BellIcon} title="Notifications" />
             <SidebarRow Icon={HomeIcon} title="Messages" />
             <SidebarRow Icon={BookmarkIcon} title="Bookmarks" />
             <SidebarRow Icon={MapIcon} title="Lists" />
+            <SidebarRow Icon={UserIcon} title="Signin" />
+            <SidebarRow Icon={MapIcon} title="More" />
         </div>
     );
 };
