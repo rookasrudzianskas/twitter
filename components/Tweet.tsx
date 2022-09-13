@@ -1,16 +1,31 @@
-import React from 'react';
-import {Tweet} from '../typings';
+import React, {useEffect, useState} from 'react';
+import {Tweet, Comment} from '../typings';
 import TimeAgo from 'react-timeago'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {fetchComments} from "../utils/fetchComments";
 
 interface Props {
     tweet: Tweet
 }
 
 const Tweet = ({tweet}: Props) => {
+
+    const [comments, setComments] = useState<Comment[]>([]);
+    const refreshComments = async () => {
+        console.log('This is tweet id', tweet._id)
+        const comments: Comment[] = await fetchComments(tweet._id);
+        setComments(comments);
+    }
+
+    useEffect(() => {
+        refreshComments();
+    }, []);
+
+    console.log(comments);
+
     return (
         <div className="flex flex-col space-x-3 border-y p-5 border-gray-">
             <div className="flex space-x-3">
