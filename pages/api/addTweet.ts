@@ -33,8 +33,13 @@ export default async function handler(
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${process.env.SANITY_API_TOKEN}`
-        }
+        },
+        body: JSON.stringify(mutations),
+        method: 'POST'
     })
 
-    res.status(200).json({name: 'John Doe'})
+    const json = await result.json();
+
+    // @ts-ignore
+    res.status(200).json({message: 'Added!'});
 }

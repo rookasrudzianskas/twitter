@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {Dispatch, SetStateAction, useRef, useState} from 'react';
 import {
     CalendarIcon,
 } from '@heroicons/react/20/solid';
@@ -7,8 +7,15 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import SearchIcon from '@mui/icons-material/Search';
 import {useSession} from "next-auth/react";
+import {Tweet, TweetBody} from "../typings";
+import {fetchTweets} from "../utils/fetchTweets";
+import toast from "react-hot-toast";
 
-const TweetBox = () => {
+interface Props {
+    setTweets: Dispatch<SetStateAction<Tweet[]>>
+}
+
+const TweetBox = ({setTweets}: Props) => {
     const [input, setInput] = useState<string>('');
     const {data: session} = useSession();
     const [imageUrlBoxIsOpen, setImageUrlBoxIsOpen] = useState<boolean>(false);
@@ -23,8 +30,45 @@ const TweetBox = () => {
         setImageUrlBoxIsOpen(false);
     }
 
+    const postTweet = async () => {
+        const tweetInfo: TweetBody = {
+            text: input,
+            username: session?.user?.name || "Unknown User",
+            profileImg: session?.user?.image || "https://links.papareact.com/gll",
+            image: image,
+        }
+
+        const result = await fetch(`/api/addTweet`, {
+            body: JSON.stringify(tweetInfo),
+            method: 'POST',
+        });
+
+        const json = await result.json();
+
+        const newTweets = await fetchTweets();
+        setTweets(newTweets);
+
+        toast('Tweet added!', {
+            icon: '👍',
+        })
+
+        return json;
+
+    }
+    // @ts-ignore
+    const handleSubmit = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+        e.preventDefault();
+        if(!input) return;
+
+        postTweet();
+        setInput('');
+        setImage('');
+        setImageUrlBoxIsOpen(false);
+    }
+
     return (
         <div className="flex space-x-2 p-5">
+            {/* @ts-ignore */}
             <img src={session ? session?.user?.image : 'https://yt3.ggpht.com/-CDERLAq3BNY7murpWzg3z9Qde3c9ZrRx59LlLEb1UzKDKZ_ckpTAOlYVQ5TJo9XTgJl2kh9bw=s900-c-k-c0x00ffffff-no-rj'} className="h-14 w-14 rounded-full object-cover mt-4" alt=""/>
             <div className="flex flex-1 items-center pl-2">
                 <form className="flex flex-1 flex-col">
@@ -38,7 +82,7 @@ const TweetBox = () => {
                             <LocationOnIcon className="w-5 h-5" />
                         </div>
 
-                        <button disabled={!input || !session} className="bg-twitter px-5 py-2 font-bold text-white rounded-full disabled:opacity-40">Tweet</button>
+                        <button onClick={handleSubmit} disabled={!input || !session} className="bg-twitter px-5 py-2 font-bold text-white rounded-full disabled:opacity-40">Tweet</button>
                     </div>
                     {imageUrlBoxIsOpen && (
                         <form className="mt-5 flex rounded-lg bg-twitter/80 py-4 px-4" action="">

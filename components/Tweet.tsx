@@ -6,6 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {fetchComments} from "../utils/fetchComments";
+import {useSession} from "next-auth/react";
 
 interface Props {
     tweet: Tweet
@@ -14,6 +15,9 @@ interface Props {
 const Tweet = ({tweet}: Props) => {
 
     const [comments, setComments] = useState<Comment[]>([]);
+    const [commentBoxVisible, setCommentBoxVisible] = useState<boolean>(false);
+    const [input, setInput] = useState<string>('');
+    const {data: session} = useSession();
     const refreshComments = async () => {
         // console.log('This is the main id 🎫', tweet._id)
         const comments: Comment[] = await fetchComments(tweet._id);
@@ -26,6 +30,13 @@ const Tweet = ({tweet}: Props) => {
     }, []);
 
     console.log(comments);
+
+    const handleSubmit = (e: React.MouseEvent<HTMLFormElement, MouseEvent>) => {
+        e.preventDefault();
+        if(!input) return;
+
+        setInput('');
+    }
 
     return (
         <div className="flex flex-col space-x-3 border-y p-5 border-gray-">
@@ -48,7 +59,7 @@ const Tweet = ({tweet}: Props) => {
             </div>
 
             <div className="mt-5 flex justify-between">
-                <div className="flex cursor-pointer space-x-3 items-center text-gray-400">
+                <div onClick={() => session && setCommentBoxVisible(!commentBoxVisible)} className="flex cursor-pointer space-x-3 items-center text-gray-400">
                     <ChatBubbleOutlineIcon className="w-5 h-5" />
                     <p className="">{comments.length}</p>
                 </div>
@@ -62,6 +73,13 @@ const Tweet = ({tweet}: Props) => {
                     <CloudUploadIcon className="w-5 h-5" />
                 </div>
             </div>
+
+            {commentBoxVisible && (
+                <form action="" onClick={handleSubmit} className="mt-3 flex space-x-3">
+                    <input value={input} onChange={(e) => setInput(e.target.value)} className="flex-1 rounded-lg outline-none bg-gray-100 p-2" type="text" placeholder="Write a comment"/>
+                    <button disabled={!input} type="submit" className="text-twitter disabled:text-gray-200">Post</button>
+                </form>
+            )}
 
             {comments?.length > 0 && (
                 <div className="my-2 mt-5 max-h-44 space-y-5 overflow-y-scroll border-t border-gray-100 p-5">
