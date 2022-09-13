@@ -15,9 +15,9 @@ const Tweet = ({tweet}: Props) => {
 
     const [comments, setComments] = useState<Comment[]>([]);
     const refreshComments = async () => {
-        console.log('This is tweet id', tweet._id)
+        // console.log('This is the main id 🎫', tweet._id)
         const comments: Comment[] = await fetchComments(tweet._id);
-        setComments(comments);
+        setComments(comments.comments);
     }
 
     useEffect(() => {
@@ -61,6 +61,24 @@ const Tweet = ({tweet}: Props) => {
                     <CloudUploadIcon className="w-5 h-5" />
                 </div>
             </div>
+
+            {comments?.length > 0 && (
+                <div className="my-2 mt-5 max-h-44 space-y-5 overflow-y-scroll border-t border-gray-100 p-5">
+                    {comments.map(comment => (
+                        <div key={comment._id} className="flex space-x-2">
+                            <img src={comment.profileImg} className="h-7 w-7 rounded-full object-cover" alt=""/>
+                            <div className="">
+                                <div className="flex items-center space-x-1">
+                                    <p className="mr-1 font-bold">{comment.username}</p>
+                                    <p className="hidden text-sm text-gray-500 lg:inline">@{comment.username.replace(/\s+/g, '').toLowerCase()} •</p>
+                                    <TimeAgo className="text-sm text-gray-500" date={comment._createdAt} />
+                                </div>
+                                <p>{comment.comment}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
         </div>
     );
