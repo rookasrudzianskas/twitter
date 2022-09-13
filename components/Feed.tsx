@@ -1,7 +1,14 @@
 import React from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import TweetBox from "./TweetBox";
-const Feed = () => {
+import {Tweet} from "../typings";
+import TweetComponent from './Tweet';
+
+interface Props {
+    tweets: Tweet[]
+}
+
+const Feed = ({tweets}: Props) => {
     return (
         <div className="col-span-7 lg:col-span-5 border-x">
           <div className="flex items-center justify-between">
@@ -11,6 +18,12 @@ const Feed = () => {
 
             <div>
                 <TweetBox />
+            </div>
+
+            <div>
+                {tweets.map(tweet => (
+                    <TweetComponent key={tweet._id} tweet={tweet} />
+                ))}
             </div>
 
         </div>
