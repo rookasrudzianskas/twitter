@@ -6,6 +6,7 @@ import Feed from "../components/Feed";
 import Widgets from "../components/Widgets";
 import {fetchTweets} from "../utils/fetchTweets";
 import {Tweet} from "../typings";
+import {Toaster} from "react-hot-toast";
 
 interface Props {
     tweets: Tweet[]
@@ -19,6 +20,8 @@ const Home: NextPage = ({tweets}: Props) => {
         <title>Twitter</title>
         <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1200px-Twitter-logo.svg.png" />
       </Head>
+
+        <Toaster />
 
         <main className="grid grid-cols-9">
             <Sidebar />

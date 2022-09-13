@@ -17,6 +17,7 @@ const Tweet = ({tweet}: Props) => {
     const refreshComments = async () => {
         // console.log('This is the main id 🎫', tweet._id)
         const comments: Comment[] = await fetchComments(tweet._id);
+        // @ts-ignore
         setComments(comments.comments);
     }
 
@@ -49,7 +50,7 @@ const Tweet = ({tweet}: Props) => {
             <div className="mt-5 flex justify-between">
                 <div className="flex cursor-pointer space-x-3 items-center text-gray-400">
                     <ChatBubbleOutlineIcon className="w-5 h-5" />
-                    <p className="">2</p>
+                    <p className="">{comments.length}</p>
                 </div>
                 <div className="flex cursor-pointer space-x-3 items-center text-gray-400">
                     <FavoriteBorderIcon className="w-5 h-5" />
