@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
     CalendarIcon,
 } from '@heroicons/react/20/solid';
@@ -12,6 +12,16 @@ const TweetBox = () => {
     const [input, setInput] = useState<string>('');
     const {data: session} = useSession();
     const [imageUrlBoxIsOpen, setImageUrlBoxIsOpen] = useState<boolean>(false);
+    const imageInputRef = useRef<HTMLInputElement>(null);
+    const [image, setImage] = useState('');
+
+    const addImageToTweet = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        if(!imageInputRef.current?.value) return;
+        setImage(imageInputRef.current?.value);
+        imageInputRef.current.value = '';
+        setImageUrlBoxIsOpen(false);
+    }
 
     return (
         <div className="flex space-x-2 p-5">
@@ -30,6 +40,17 @@ const TweetBox = () => {
 
                         <button disabled={!input || !session} className="bg-twitter px-5 py-2 font-bold text-white rounded-full disabled:opacity-40">Tweet</button>
                     </div>
+                    {imageUrlBoxIsOpen && (
+                        <form className="mt-5 flex rounded-lg bg-twitter/80 py-4 px-4" action="">
+                            <input ref={imageInputRef} placeholder="Enter image Url" type="text" className="flex-1 bg-transparent p-2 text-white outline-none placeholder:text-white"/>
+                            <button onClick={addImageToTweet} type="submit" className="font-bold text-white">Add Image</button>
+                        </form>
+                    )}
+
+                    {image && (
+                        <img src={image} className="mt-10 h-40 w-full rounded-xl object-contain shadow-lg" alt=""/>
+                    )}
+
                 </form>
             </div>
         </div>
